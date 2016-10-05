@@ -1,0 +1,63 @@
+{
+  "name": "volebo-wix",
+  "version": "0.0.1",
+  "description": "Wix.com integration service for volebo.net",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "`npm bin`/mocha",
+    "lint": "`npm bin`/eslint ./",
+    "coverage": "`npm bin`/istanbul cover `npm bin`/_mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volebo/wix.git"
+  },
+  "keywords": [
+    "wix",
+    "integration",
+    "API",
+    "express",
+    "express-middleware",
+    "middleware",
+    "volebo",
+    "volebo.net"
+  ],
+  "author": {
+    "name": "Volebo",
+    "url": "http://dev.volebo.net"
+  },
+  "contributors": [
+    {
+      "name": "Koryukov Maksim",
+      "email": "maxkoryukov@gmail.com"
+    }
+  ],
+  "os": [
+    "linux"
+  ],
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/volebo/wix/issues"
+  },
+  "homepage": "https://github.com/volebo/wix#readme",
+  "dependencies": {
+    "debug": "~2.2.0",
+    "dotenv": "^2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.1.1",
+    "eslint-config-volebo": "^1.1.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^2.5.3",
+    "supertest": "^2.0.0"
+  },
+  "XXXX-peerDependencies": {
+    "express": "4.x"
+  }
+}
