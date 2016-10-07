@@ -52,7 +52,7 @@ script:
 #  - npm test
   - npm run lint
   - npm run coverage
-  - bithound check git@github.com:volebo/volebo-wix.git
+  - bithound check git@github.com:volebo/wix.git
 
 after_success:
   - codecov

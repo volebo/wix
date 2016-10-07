@@ -1,5 +1,5 @@
 {
-  "name": "volebo-wix",
+  "name": "@volebo/wix",
   "version": "0.0.1",
   "description": "Wix.com integration service for volebo.net",
   "main": "index.js",
@@ -46,8 +46,10 @@
   },
   "homepage": "https://github.com/volebo/wix#readme",
   "dependencies": {
+    "@volebo/volebo-express": "^0.0.1",
     "debug": "~2.2.0",
-    "dotenv": "^2.0.0"
+    "dotenv": "^2.0.0",
+    "wix": "0.1.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -56,8 +58,5 @@
     "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
     "supertest": "^2.0.0"
-  },
-  "XXXX-peerDependencies": {
-    "express": "4.x"
   }
 }

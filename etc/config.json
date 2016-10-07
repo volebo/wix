@@ -1,6 +1,5 @@
 {
 	"server": {
-		"--SOCK--port": "/tmp/net.volebo.wix.sock",
 		"port": 3000
 	},
 

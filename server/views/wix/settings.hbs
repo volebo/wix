@@ -19,11 +19,51 @@ http://spdx.org/licenses/MIT
 
 --}}
 
-<section>
-	<h2>Settings</h2>
+<div wix-ctrl="appSettings">
 
-	<p><i>Width:</i> <strong>{{width}}</strong></p>
-	<p><i>Instance:</i> <strong>{{instance}}</strong></p>
+	<section>
+		<h2>Settings</h2>
 
-	<p><i>Locale:</i> <strong>{{locale}}</strong></p>
-</section>
+		<p><i>Width:</i> <strong>{{width}}</strong></p>
+		<p><i>Instance:</i> <strong>{{instance}}</strong></p>
+
+		<p><i>Locale:</i> <strong>{{locale}}</strong></p>
+	</section>
+
+	<section>
+		<h2>Controls</h2>
+		<div
+			wix-ctrl="Checkbox"
+			id="sampleCheckbox"
+			wix-options="{
+				label:'Check me...',
+				defaultValue:'true'}"
+			wix-param="show_title">
+		</div>
+	</section>
+</div>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-with-addons.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js"></script>
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+<script src="//static.parastorage.com/services/editor-ui-lib/1.20.0/lib/editor-ui-lib.min.js"></script>
+<script src="//static.parastorage.com/services/editor-ui-lib/1.20.0/lib/editor-ui-lib-jquery.min.js"></script>
+
+<script>
+	//onChange function
+	$(document).ready(function(){
+		$("#sampleCheckbox").getCtrl().onChange(function (value) {
+			console.debug(value);
+		});
+
+		//getValue function
+		console.debug($("#sampleCheckbox").getCtrl().getValue());
+
+		//setValue function
+		$("#sampleCheckbox").getCtrl().setValue(true);
+	});
+
+</script>
+

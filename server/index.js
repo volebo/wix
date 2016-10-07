@@ -28,7 +28,7 @@ const vbexpress       = require('@volebo/volebo-express');
 
 debug('initializing');
 
-let options = require(path.join('..', 'etc', 'interaction.json'));
+let options = require(path.join('..', 'etc', 'config.json'));
 
 let app = vbexpress(options);
 

@@ -23,11 +23,23 @@ http://spdx.org/licenses/MIT
 
 const debug           = require('debug')('volebo:routes:wix0');
 const vbexpress       = require('@volebo/volebo-express');
+const wix             = require('wix');
 
-function wix0 (/*expressApp*/) {
+function wix0 (expressApp) {
 
 	let router = new vbexpress.Router();
 
+	// TODO: use ENV
+	wix.secret(expressApp.config.wix.secret);
+
+	// GET /games-list?
+	//	cacheKiller=1475708149032&
+	//	compId=comp-itxihrc1&
+	//	deviceType=desktop&
+	//	instance=Q5zpKbzozdmm6MBoCmaBL3l5zi6EM5JlDOcmB8R4mwU.eyJpbnN0YW5jZUlkIjoiM2ZjYjdhYjMtZWI4MC00ODZkLWIzNmMtNDgwMzRlYzU3ODRmIiwic2lnbkRhdGUiOiIyMDE2LTEwLTA1VDIyOjU1OjQxLjY5OFoiLCJ1aWQiOm51bGwsImlwQW5kUG9ydCI6IjUuMTg5Ljg1LjE4Mi81NDQwNCIsInZlbmRvclByb2R1Y3RJZCI6bnVsbCwiZGVtb01vZGUiOmZhbHNlLCJhaWQiOiJmZGE1ZWI1My1hOGU0LTRjYWUtYWY3Mi1jMTA3M2EwMjg2MTYiLCJzaXRlT3duZXJJZCI6IjE1MDM5Yzc1LWJkNTItNGQ5ZC04OTZiLTU4YWNlN2Q4Yzg5MCJ9&
+	//	locale=ru&
+	//	viewMode=site&
+	//	width=1172
 	// games-list widget URL template
 	router.get('/games-list', (req, res, next) => {
 		// instance=[signed-instance]    The signed app instance
@@ -39,10 +51,61 @@ function wix0 (/*expressApp*/) {
 		// &originCompId[originCompId]
 		// &deviceType=[device]
 
-		res.locals.instance = req.query.instance;
-		res.locals.width = req.query.width;
+		// 1 extract query params
+		let instance = req.query.instance;
+		let width = Number(req.query.width || 0);
+		let locale = req.query.locale;
 
-		res.locals.locale = req.query.locale;
+		// parse encoded data
+		// http://dev.wix.com/docs/infrastructure/app-instance/#instance-properties
+		debug(wix.secret());
+		let instanceData = wix.parse(instance);
+
+		if (! (instanceData && instanceData.instanceId)) {
+			// not a WIX request!
+
+			// TODO : #1 generate correct errors
+			let err = new Error('Not a WIX request!');
+			err.status = 400;
+			return next(err);
+		}
+
+		res.locals.locale = locale;
+		res.locals.data = instanceData;
+
+		req.lang.setLocale(locale);
+
+		res.locals.width = width;
+		res.locals.games = [{
+			dateFrom: new Date(2016, 1, 18, 22, 13),
+			homeTeam: {
+				name: 'A'
+			},
+			awayTeam: {
+				name: 'B'
+			},
+
+			gym: {
+				name: 'gym'
+			}
+		}, {
+			dateFrom: new Date(2016, 1, 14, 22, 13),
+			homeTeam: {
+				name: 'ОКБ АВТОМАТИКА'
+			},
+			awayTeam: {
+				name: 'АЙТИЭМ ХОЛДИНГ - УрИ ГПС МЧС [F]'
+			},
+
+			gym: {
+				name: 'AVS-ОТЕЛЬ'
+			},
+
+			referee: {
+				nameShort: 'Карташев И. В.',
+				nameFull: 'Карташев Игорь Витальевич'
+			}
+		}];
 
 		res.render('wix/games-list');
 	});

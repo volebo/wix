@@ -19,11 +19,47 @@ http://spdx.org/licenses/MIT
 
 --}}
 
+<section class="vlb-widget">{{~!-- --~}}
+	<ul class="game-list">
+	{{~#each games as |game|~}}
+		<li class="game">{{~!-- --~}}
+			<time datetime="">
+				{{~formatDate game.dateFrom day="2-digit" month="2-digit" year="numeric" hour="2-digit" minute="2-digit"~}}
+			</time>{{~!-- --~}}
+			<span class="teams"> <strong class="team-name">{{game.homeTeam.name}}</strong> : <strong class="team-name">{{game.awayTeam.name}}</strong></span>{{~!-- --~}}
+			<span class="gym"> [<span class="gym-name">{{game.gym.name}}</span>] </span>{{~!-- --~}}
+			{{formatMessage "Судья"}}: <span class="referee-name">
+			{{~#if game.referee.nameShort~}}
+				{{game.referee.nameShort}}
+			{{~^~}}
+				???
+			{{~/if~}}
+			</span>{{~!-- --~}}
+		</li>
+	{{~/each~}}
+	</ul>{{~!-- --~}}
+</section>
+
+{{!--
+
 <section>
-	<h2>Games List</h2>
+	<h2>DEBUG</h2>
 
 	<p><i>Width:</i> <strong>{{width}}</strong></p>
 	<p><i>Instance:</i> <strong>{{instance}}</strong></p>
 
 	<p><i>Locale:</i> <strong>{{locale}}</strong></p>
+	{{intl.locales}}
+	<hr />
+	<h3>Instance Data</h3>
+
+	<p><i>Instance ID:</i> <strong>{{data.instanceId}}</strong></p>
+	<p><i>UID:</i> <strong>{{data.uid}}</strong></p>
+	<p><i>AID:</i> <strong>{{data.aid}}</strong></p>
+
+	<hr />
+	<h3>System</h3>
+	<p><i>HTTPS</i> <strong>{{https}}</strong></p>
 </section>
+
+--}}
