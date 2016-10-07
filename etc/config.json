@@ -1,0 +1,25 @@
+{
+	"server": {
+		"--SOCK--port": "/tmp/net.volebo.wix.sock",
+		"port": 3000
+	},
+
+	"debug": {
+		"renderStack": true
+	},
+
+	"session": {
+		"enabled": false
+	},
+
+	"db" : {
+		"username": "",
+		"password": "12345678",
+		"database": "db-dev",
+		"host": "localhost",
+		"benchmark": true
+	},
+
+	"wix" : {
+	}
+}
