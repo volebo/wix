@@ -20,26 +20,16 @@ http://spdx.org/licenses/MIT
 --}}
 
 <!DOCTYPE html>
-<html>
+<html lang="{{lang.code}}">
 	<head>
 		<title>{{title}}</title>
-		<style>
-			.vlb-widget {
-				max-width: {{width}}px;
-			}
 
-			.game-list .game:nth-child(even) {
-				background-color: rgba(0,0,0, 0.05);
-			}
-			.game-list .game:nth-child(odd) {
-				background-color: rgba(0,0,0, 0.1);
-			}
-		</style>
+		<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="//static.parastorage.com/services/js-sdk/1.66.0/js/wix.min.js"></script>
 	</head>
 	<body>
 
 		{{~{body}~}}
 
-		<script src="//static.parastorage.com/services/js-sdk/1.66.0/js/wix.min.js"></script>
 	</body>
 </html>

@@ -1,10 +1,11 @@
 {
   "name": "@volebo/wix",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Wix.com integration service for volebo.net",
   "main": "index.js",
   "scripts": {
     "start": "node index",
+    "load": "node test/siege.js",
     "test": "`npm bin`/mocha",
     "lint": "`npm bin`/eslint ./",
     "coverage": "`npm bin`/istanbul cover `npm bin`/_mocha"
@@ -15,6 +16,7 @@
   },
   "keywords": [
     "wix",
+    "wix-app",
     "integration",
     "API",
     "express",
@@ -47,8 +49,9 @@
   "homepage": "https://github.com/volebo/wix#readme",
   "dependencies": {
     "@volebo/volebo-express": "^0.0.1",
-    "debug": "~2.2.0",
-    "dotenv": "^2.0.0",
+    "debug": "2.2.0",
+    "dotenv": "2.0.0",
+    "mysql": "2.11.1",
     "wix": "0.1.1"
   },
   "devDependencies": {
@@ -57,6 +60,7 @@
     "eslint-config-volebo": "^1.1.0",
     "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
+    "siege": "^0.2.0",
     "supertest": "^2.0.0"
   }
 }

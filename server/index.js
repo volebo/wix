@@ -26,9 +26,11 @@ const url             = require('url');
 const debug           = require('debug')('volebo:wix:index');
 const vbexpress       = require('@volebo/volebo-express');
 
+const Wix0            = require('./routes/wix0');
+
 debug('initializing');
 
-let options = require(path.join('..', 'etc', 'config.json'));
+let options = vbexpress.Config.readJson(path.join(__dirname, 'config', 'config.json'));
 
 let app = vbexpress(options);
 
@@ -38,29 +40,7 @@ app.hbs.layoutsDir = 'server/views/layouts/';
 app.hbs.partialsDir = 'server/views/partials/';
 app.set('views', 'server/views/');
 
-// Required for generating callback url for 3d side services
-// ADVICE 1 : http://stackoverflow.com/a/10185427/1115187
-// ADVICE 2 : http://stackoverflow.com/a/15922426/1115187
-// TODO : need to refactor, it is not a clean solution:
-app.getRootUrl = function() {
-
-	return url.format({
-		protocol: 'http',
-		hostname: '127.0.0.1',
-		port: app.config.server.port,
-		pathname: '/'
-	})
-
-/*
-	return url.format({
-		protocol: req.protocol,
-		host: req.get('host'),
-		pathname: req.originalUrl
-	})
-*/
-}
-
-var wix0 = require('./routes/wix0')(app);
-app.lang.use(wix0);
+var wix0 = Wix0(app);
+app.lang.use('/api/v0', wix0);
 
 exports = module.exports = app;
