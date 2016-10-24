@@ -42,7 +42,7 @@
     "node": ">=4.0.0",
     "npm": ">=3.0.0"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/volebo/wix/issues"
   },
