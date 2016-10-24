@@ -1,5 +1,5 @@
 {
-  "name": "@volebo/wix",
+  "name": "@volebo/www-wix",
   "version": "0.0.2",
   "description": "Wix.com integration service for volebo.net",
   "main": "index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/volebo/wix.git"
+    "url": "git+https://github.com/volebo/www-wix.git"
   },
   "keywords": [
     "wix",
@@ -44,20 +44,19 @@
   },
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/volebo/wix/issues"
+    "url": "https://github.com/volebo/www-wix/issues"
   },
-  "homepage": "https://github.com/volebo/wix#readme",
+  "homepage": "https://github.com/volebo/www-wix#readme",
   "dependencies": {
-    "@volebo/volebo-express": "^0.0.1",
-    "debug": "2.2.0",
+    "@volebo/volebo-express": "0.x",
+    "debug": "2.3.3",
     "dotenv": "2.0.0",
-    "mysql": "2.11.1",
-    "wix": "0.1.1"
+    "passport-wix-app": "^0.1.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.1.1",
-    "eslint-config-volebo": "^1.1.0",
+    "eslint-config-volebo": "^2.0.0",
     "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
     "siege": "^0.2.0",

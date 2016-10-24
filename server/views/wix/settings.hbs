@@ -2,8 +2,8 @@
 
 Wix Integration service for volebo.net
 
-Copyright (C) 2016  Volebo <volebo.net@gmail.com>
-Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+Copyright (C) 2016-2017 Volebo <dev@volebo.net>
+Copyright (C) 2016-2017 Koryukov Maksim <maxkoryukov@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <div wix-ctrl="panelTabs" wix-options="{defaultTabIndex:0}">
 
 
-
-
-
 	<!--main tab-->
 
 	<div tab="Main" class="main-tab">
-{{!-- 		<img class="app-logo" src="src/settings/svg/logo.svg" alt="app logo"/>
- --}}
+ 		<img class="app-logo" src="static/volebo-wix-logo.svg" alt="app logo"/>
 
  		<p class="app-description">
 			This is the Wix App settings demo.<br/>
@@ -53,6 +49,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			 id="main-cta"
 		></div>
 	</div>
+
+	<!--Design tab-->
+
+	<section class="tab" tab="{{__ 'gameList.settings.design.label'}}">
+		<hr class="divider-long"/>
+
+		<div wix-ctrl="SectionDividerLabeled"
+			 wix-options="{label: '{{__ 'gameList.settings.design.textAndBackground.label' }}'}">
+		</div>
+
+		<hr class="divider-long"/>
+
+		<div wix-param-font="defaultFont"
+			 wix-param-color="defaultColor"
+			 wix-ctrl="FontAndColorPicker"
+			 wix-options="{
+					title: '{{__ "gameList.settings.design.defaultFontAndColor.label"}}',
+					startWithColor: 'color-5',
+					startWithTheme:'font_8'
+				}"
+		></div>
+
+		<hr class="divider-long"/>
+
+		<div wix-param="backgroundColor"
+			wix-ctrl="ColorPickerSlider"
+			wix-options="{
+					title: '{{__ "gameList.settings.design.background.label"}}',
+					startWithColor: 'color-1'
+				}"
+		></div>
+
+		<div wix-param="backgroundColorAlt"
+			 wix-ctrl="ColorPickerSlider"
+			 wix-options="{
+					title: '{{__ "gameList.settings.design.backgroundAlt.label"}}',
+					startWithColor: 'color-2'
+				}"
+		></div>
+
+		<hr class="divider-long"/>
+
+		<div wix-param-font="homeTeamFont"
+			 wix-param-color="homeTeamColor"
+			 wix-ctrl="FontAndColorPicker"
+			 wix-options="{
+					title: '{{__ "gameList.settings.design.homeTeamText.label"}}',
+					startWithColor: 'color-9',
+					startWithTheme:'font_8',
+					infoTitle: '{{__ "gameList.settings.design.homeTeamText.title"}}',
+					infoText: '{{__ "gameList.settings.design.homeTeamText.info"}}'
+				}"
+		></div>
+
+		<div wix-param-font="awayTeamFont"
+			 wix-param-color="awayTeamColor"
+			 wix-ctrl="FontAndColorPicker"
+			 wix-options="{
+					title: '{{__ "gameList.settings.design.awayTeamText.label"}}',
+					startWithColor: 'color-10',
+					startWithTheme:'font_8',
+					infoTitle: '{{__ "gameList.settings.design.awayTeamText.title"}}',
+					infoText: '{{__ "gameList.settings.design.awayTeamText.info"}}'
+				}"
+		></div>
+
+		<hr class="divider-long"/>
+
+	</section>
 
 	<!--settings tab-->
 
@@ -220,57 +285,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				}"
 		></div>
 	</div>
-
-	<!--Design tab-->
-
-	<section class="tab" tab="{{__ 'gameList.settings.design.label'}}">
-		<hr class="divider-long"/>
-
-		<div wix-ctrl="SectionDividerLabeled"
-			 wix-options="{label: '{{__ 'gameList.settings.design.textAndBackground.label' }}'}">
-		</div>
-
-		<hr class="divider-long"/>
-
-		<div wix-param-font="_titleFont"
-			 wix-param-color="_titleColor"
-			 wix-ctrl="FontAndColorPicker"
-			 wix-options="{
-					title: 'Title Font style and color',
-					startWithColor: 'color-5',
-					startWithTheme:'font_4',
-					infoTitle: 'some info title',
-					infoText: 'some information text should be here'
-				}"
-		></div>
-
-		<hr class="divider-long"/>
-
-		<div wix-param-font="homeTeamFont"
-			 wix-param-color="homeTeamColor"
-			 wix-ctrl="FontAndColorPicker"
-			 wix-options="{
-					title: '{{__ "gameList.settings.design.textAndBackground.homeTeam.label"}}',
-					startWithColor: 'color-9',
-					startWithTheme:'font_8',
-					infoTitle: '{{__ "gameList.settings.design.textAndBackground.homeTeam.title"}}',
-					infoText: '{{__ "gameList.settings.design.textAndBackground.homeTeam.info"}}'
-				}"
-		></div>
-
-		<hr class="divider-long"/>
-
-		<div wix-param="_backgroundColor"
-			 wix-ctrl="ColorPickerSlider"
-			 wix-options="{
-					title: 'Background Color',
-					startWithColor: 'color-1'
-				}"
-		></div>
-
-		<hr class="divider-long"/>
-
-	</section>
 
 	<!--Animations tab-->
 

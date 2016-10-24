@@ -2,8 +2,8 @@
 
 Wix Integration service for volebo.net
 
-Copyright (C) 2016  Volebo <volebo.net@gmail.com>
-Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+Copyright (C) 2016-2017 Volebo <dev@volebo.net>
+Copyright (C) 2016-2017 Koryukov Maksim <maxkoryukov@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,44 +22,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 "use strict";
 
-const debug           = require('debug')('volebo:routes:wix0');
-const vbexpress       = require('@volebo/volebo-express');
+//const debug           = require('debug')('volebo:routes:wix0');
 const wix             = require('wix');
+const _               = require('lodash');
 
-function wix0 (expressApp) {
+const vbexpress       = require('@volebo/volebo-express');
+
+const __ = function(x) { return x; };
+
+
+function wix0 (app) {
 
 	let router = new vbexpress.Router();
 
+	const commonRenderOptions = {
+		layout: 'api-v0'
+	};
+
 	// TODO: use ENV
-	wix.secret(expressApp.config.wix.secret);
+	wix.secret(app.config.wix.v0.secret);
 
-	// GET /games-list?
-	//	cacheKiller=1475708149032&
-	//	compId=comp-itxihrc1&
-	//	deviceType=desktop&
-	//	instance=Q5zpKbzozdmm6MBoCmaBL3l5zi6EM5JlDOcmB8R4mwU.eyJpbnN0YW5jZUlkIjoiM2ZjYjdhYjMtZWI4MC00ODZkLWIzNmMtNDgwMzRlYzU3ODRmIiwic2lnbkRhdGUiOiIyMDE2LTEwLTA1VDIyOjU1OjQxLjY5OFoiLCJ1aWQiOm51bGwsImlwQW5kUG9ydCI6IjUuMTg5Ljg1LjE4Mi81NDQwNCIsInZlbmRvclByb2R1Y3RJZCI6bnVsbCwiZGVtb01vZGUiOmZhbHNlLCJhaWQiOiJmZGE1ZWI1My1hOGU0LTRjYWUtYWY3Mi1jMTA3M2EwMjg2MTYiLCJzaXRlT3duZXJJZCI6IjE1MDM5Yzc1LWJkNTItNGQ5ZC04OTZiLTU4YWNlN2Q4Yzg5MCJ9&
-	//	locale=ru&
-	//	viewMode=site&
-	//	width=1172
-	// games-list widget URL template
 	router.get('/games-list', (req, res, next) => {
-		// instance=[signed-instance]    The signed app instance
-		// &width=[width]                The width of the iframe in pixels
-		// &cacheKiller=[cacheKiller]
-		// &compId=[compId]              The compId value for the app settings is always tpaSettings
-		// &viewMode=[viewMode]
-		// &locale=[locale]
-		// &originCompId[originCompId]
-		// &deviceType=[device]
 
-		// 1 extract query params
+		// extract query params
 		let instance = req.query.instance;
 		let width = Number(req.query.width || 0);
 		let locale = req.query.locale;
 
 		// parse encoded data
 		// http://dev.wix.com/docs/infrastructure/app-instance/#instance-properties
-		debug(wix.secret());
 		let instanceData = wix.parse(instance);
 
 		if (! (instanceData && instanceData.instanceId)) {
@@ -71,44 +62,51 @@ function wix0 (expressApp) {
 			return next(err);
 		}
 
-		res.locals.locale = locale;
-		res.locals.data = instanceData;
+		res.helpers = {
+			__ : __
+		};
 
-		req.lang.setLocale(locale);
-
+		res.lang.setLocale(locale);
 		res.locals.width = width;
-		res.locals.games = [{
-			dateFrom: new Date(2016, 1, 18, 22, 13),
-			homeTeam: {
-				name: 'A'
-			},
-			awayTeam: {
-				name: 'B'
-			},
 
-			gym: {
-				name: 'gym'
-			}
-		}, {
-			dateFrom: new Date(2016, 1, 14, 22, 13),
-			homeTeam: {
-				name: 'ОКБ АВТОМАТИКА'
-			},
-			awayTeam: {
-				name: 'АЙТИЭМ ХОЛДИНГ - УрИ ГПС МЧС [F]'
-			},
+		app.model.Game.collection()
+			.query('where', {tour: 97})
+			.query('where', {game_state: 2})
+			//.query('limit', 2)
+			.fetch({
+				withRelated: [
+					'homeCrew', 'awayCrew', 'gym'
+				]
+			})
+			.then( games => {
 
-			gym: {
-				name: 'AVS-ОТЕЛЬ'
-			},
+				games = _
+					.chain(games.toJSON())
+					.each( x=> {
+						x.dateFrom = x.from_date;
+						x.homeTeam = x.homeCrew;
+						x.homeTeam.shortName = x.homeTeam.short_name || x.homeTeam.name;
+						if (x.homeTeam.short_name) {
+							x.homeTeam.fullName = x.homeTeam.name;
+						}
 
-			referee: {
-				nameShort: 'Карташев И. В.',
-				nameFull: 'Карташев Игорь Витальевич'
-			}
-		}];
+						x.awayTeam = x.awayCrew;
+						x.awayTeam.shortName = x.awayTeam.short_name || x.awayTeam.name;
+						if (x.awayTeam.short_name) {
+							x.awayTeam.fullName = x.awayTeam.name;
+						}
+					})
+					.value();
 
-		res.render('wix/games-list');
+				res.locals.games = games;
+
+				// debug
+				res.locals.locale = locale;
+				res.locals.data = instanceData;
+
+				res.render('wix/games-list', commonRenderOptions);
+			})
+			.catch(e => next(e));
 	});
 
 	// App Settings request URL template
@@ -125,7 +123,7 @@ function wix0 (expressApp) {
 		res.locals.origCompId = req.query.origCompId;
 		res.locals.locale = req.query.locale;
 
-		res.render('wix/settings');
+		res.render('wix/settings', commonRenderOptions);
 	});
 
 	return router;

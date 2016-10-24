@@ -2,8 +2,8 @@
 
 Wix Integration service for volebo.net
 
-Copyright (C) 2016  Volebo <volebo.net@gmail.com>
-Copyright (C) 2016  Koryukov Maksim <maxkoryukov@gmail.com>
+Copyright (C) 2016-2017 Volebo <dev@volebo.net>
+Copyright (C) 2016-2017 Koryukov Maksim <maxkoryukov@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,25 +25,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 require('dotenv').config({silent: true});
 
 const path            = require('path');
-const url             = require('url');
-const debug           = require('debug')('volebo:wix:index');
+const debug           = require('debug')('volebo:wix:server');
 const vbexpress       = require('@volebo/volebo-express');
 
-const Wix0            = require('./routes/wix0');
+const Wix0Router      = require('./routes/wix0');
 
 debug('initializing');
 
-let options = vbexpress.Config.readJson(path.join(__dirname, 'config', 'config.json'));
+let options = vbexpress.Config.readYaml(path.join(__dirname, 'www-wix.config.yml'));
 
 let app = vbexpress(options);
 
 // TODO : move to options and use `path`. Do not use `server`
 // because we will build the app, and move it to DIST
-app.hbs.layoutsDir = 'server/views/layouts/';
-app.hbs.partialsDir = 'server/views/partials/';
-app.set('views', 'server/views/');
+app.hbs.layoutsDir = path.concat(__dirname, 'views', 'layouts');
+app.hbs.partialsDir = path.concat(__dirname, 'views', 'partials');
+app.set('views', path.concat(__dirname, 'views'));
 
-var wix0 = Wix0(app);
-app.lang.use('/api/v0', wix0);
+app.lang.use('/app/v0', new Wix0Router(app));
 
 exports = module.exports = app;
