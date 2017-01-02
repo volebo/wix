@@ -20,54 +20,64 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-"use strict";
+'use strict'
 
-//const debug           = require('debug')('volebo:routes:wix0');
-const wix             = require('wix');
-const _               = require('lodash');
+const debug           = require('debug')('volebo:www-wix:routes:wix0')
+const _               = require('lodash')
+const vbexpress       = require('@volebo/volebo-express')
+const WixAppStrategy  = require('passport-wix-app').Strategy
 
-const vbexpress       = require('@volebo/volebo-express');
+function wixWidgetMw(req, res, next) {
 
-const __ = function(x) { return x; };
+	req.wix = {
+//		instance     : req.query.instance,                // The signed app instance
+		width        : Number(req.query.width || 0),      // The width of the iframe in pixels
+		locale       : req.query.locale,                  // Current locale value
+		cacheKiller  : Number(req.query.cacheKiller),
+		deviceType   : req.query.deviceType,              // "desktop" or "mobile"
+		viewMode     : req.query.viewMode,                // "editor" or "site"
 
+		compId       : req.query.compId,                  // The compId value for the app settings is always tpaSettings
+		originCompId : req.query.originCompId || null,    // "editor" or "site"
+	}
 
+	debug(req.wix)
+
+	return next()
+}
+
+/**
+ * Create chain of middlewares for Wix v0, which will handle all wix requests
+ *
+ * @param  {Volebo.Express}   app  Volebo-express main application
+ * @return {Array.<MW>}            Middleware/array of middlewares to handle WIX requests
+ */
 function wix0 (app) {
 
-	let router = new vbexpress.Router();
+	app.passport.use('wix0', new WixAppStrategy({
+		secret: app.config.wix.v0.secret
+	}, function verifyCallback(instance, done) {
+		const user = instance.instanceId
+
+debug('verify callback', instance)
+
+		return done(null, user)
+	}))
+
+	const authMw = app.passport.authenticate('wix0', { session: false })
+	const router = new vbexpress.Router();
 
 	const commonRenderOptions = {
 		layout: 'api-v0'
 	};
 
-	// TODO: use ENV
-	wix.secret(app.config.wix.v0.secret);
-
 	router.get('/games-list', (req, res, next) => {
-
 		// extract query params
-		let instance = req.query.instance;
-		let width = Number(req.query.width || 0);
-		let locale = req.query.locale;
 
-		// parse encoded data
-		// http://dev.wix.com/docs/infrastructure/app-instance/#instance-properties
-		let instanceData = wix.parse(instance);
+console.log('cccccccccccccccccccccccccc', req.user)
 
-		if (! (instanceData && instanceData.instanceId)) {
-			// not a WIX request!
-
-			// TODO : #1 generate correct errors
-			let err = new Error('Not a WIX request!');
-			err.status = 400;
-			return next(err);
-		}
-
-		res.helpers = {
-			__ : __
-		};
-
-		res.lang.setLocale(locale);
-		res.locals.width = width;
+		req.lang.setLocale(req.wix.locale);
+		res.locals.width = req.wix.width;
 
 		app.model.Game.collection()
 			.query('where', {tour: 97})
@@ -75,38 +85,17 @@ function wix0 (app) {
 			//.query('limit', 2)
 			.fetch({
 				withRelated: [
-					'homeCrew', 'awayCrew', 'gym'
+					'homeTeam', 'awayTeam', 'gym'
 				]
 			})
-			.then( games => {
-
-				games = _
-					.chain(games.toJSON())
-					.each( x=> {
-						x.dateFrom = x.from_date;
-						x.homeTeam = x.homeCrew;
-						x.homeTeam.shortName = x.homeTeam.short_name || x.homeTeam.name;
-						if (x.homeTeam.short_name) {
-							x.homeTeam.fullName = x.homeTeam.name;
-						}
-
-						x.awayTeam = x.awayCrew;
-						x.awayTeam.shortName = x.awayTeam.short_name || x.awayTeam.name;
-						if (x.awayTeam.short_name) {
-							x.awayTeam.fullName = x.awayTeam.name;
-						}
-					})
-					.value();
-
-				res.locals.games = games;
-
-				// debug
-				res.locals.locale = locale;
-				res.locals.data = instanceData;
-
-				res.render('wix/games-list', commonRenderOptions);
+			.then(games => games.toJSON())
+			.then(games => {
+				res.locals.games = games
+				return res.render('wix0/games-list', commonRenderOptions)
 			})
-			.catch(e => next(e));
+			.catch(e => {
+				return next(e)
+			})
 	});
 
 	// App Settings request URL template
@@ -123,10 +112,10 @@ function wix0 (app) {
 		res.locals.origCompId = req.query.origCompId;
 		res.locals.locale = req.query.locale;
 
-		res.render('wix/settings', commonRenderOptions);
+		res.render('wix0/settings', commonRenderOptions);
 	});
 
-	return router;
+	return [authMw, wixWidgetMw, router]
 }
 
 exports = module.exports = wix0;

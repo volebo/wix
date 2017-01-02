@@ -20,28 +20,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-"use strict";
+'use strict'
 
-require('dotenv').config({silent: true});
+require('dotenv').config({silent: true})
 
-const path            = require('path');
-const debug           = require('debug')('volebo:wix:server');
-const vbexpress       = require('@volebo/volebo-express');
+const path            = require('path')
+const debug           = require('debug')('volebo:www-wix:server')
+const vbexpress       = require('@volebo/volebo-express')
 
-const Wix0Router      = require('./routes/wix0');
+const Wix0Router      = require('./routes/wix0')
 
-debug('initializing');
+debug('initializing')
 
-let options = vbexpress.Config.readYaml(path.join(__dirname, 'www-wix.config.yml'));
+const options = vbexpress.Config.readYaml(path.join(__dirname, 'www-wix.config.yml'))
 
-let app = vbexpress(options);
+const app = vbexpress(options)
 
 // TODO : move to options and use `path`. Do not use `server`
 // because we will build the app, and move it to DIST
-app.hbs.layoutsDir = path.concat(__dirname, 'views', 'layouts');
-app.hbs.partialsDir = path.concat(__dirname, 'views', 'partials');
-app.set('views', path.concat(__dirname, 'views'));
+app.hbs.layoutsDir = path.join(__dirname, 'views', 'layouts')
+app.hbs.partialsDir = path.join(__dirname, 'views', 'partials')
+app.set('views', path.join(__dirname, 'views'))
 
-app.lang.use('/app/v0', new Wix0Router(app));
+app.lang.use('/wix/v0', new Wix0Router(app))
 
-exports = module.exports = app;
+exports = module.exports = app

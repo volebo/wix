@@ -4,7 +4,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 # =========================================
 
-# place per-project settings here
+# per-project settings here
+/server/www-wix.config.yml
 
 # =========================================
 # common part

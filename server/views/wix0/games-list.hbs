@@ -57,10 +57,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<time datetime="">
 				{{~formatDate game.dateFrom day="2-digit" month="2-digit" year="numeric" hour="2-digit" minute="2-digit"~}}
 			</time>{{~!-- --~}}
-			<span class="teams"> {{!-- --~}}
-				<strong class="team-name team-name-home" {{#if game.homeTeam.fullName}}title="{{game.homeTeam.fullName}}" {{/if}}>{{game.homeTeam.shortName}}</strong> : {{!-- --~}}
-				<strong class="team-name team-name-away" {{#if game.awayTeam.fullName}}title="{{game.awayTeam.fullName}}" {{/if}}>{{game.awayTeam.shortName}}</strong>{{!-- --~}}
-			</span> {{!-- --~}}
+			<span class="teams"> {{~!-- --~}}
+				<strong class="team-name team-name-home" {{#if game.homeTeam.fullName}}title="{{game.homeTeam.fullName}}" {{/if}}>{{game.homeTeam.shortName}}</strong> : {{~!-- --~}}
+				<strong class="team-name team-name-away" {{#if game.awayTeam.fullName}}title="{{game.awayTeam.fullName}}" {{/if}}>{{game.awayTeam.shortName}}</strong>{{~!-- --~}}
+			</span> {{~!-- --~}}
 			<span class="gym">[<span class="gym-name">{{game.gym.name}}</span>] </span>{{~!-- --~}}
 			{{__ "referee.label"}}<span class="referee-name" {{~#if game.referee.longName~}}title="{{game.referee.longName}}" {{/if}}>
 			{{~#if game.referee.shortName~}}
@@ -68,7 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{{~^~}}
 				???
 			{{~/if~}}
-			</span>{{!-- --~}}
+			</span>{{~!-- --~}}
 		</div>
 	{{~/each~}}
 	</div>{{~!-- --~}}
@@ -76,30 +76,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<div class="volebo-ad">
 		<small>{{__ 'volebo.ad'}}</small>
 	</div>
-
-	{{#if debug}}
-	<section>
-		<h2>DEBUG</h2>
-
-		<p><i>Width:</i> <strong>{{width}}</strong></p>
-		<p><i>Locale:</i> <strong>{{locale}}</strong></p>
-		<p><i>Instance:</i> <strong>{{instance}}</strong></p>
-
-		<hr />
-		<h3>Instance Data</h3>
-
-		<p><i>Instance ID:</i> <strong>{{data.instanceId}}</strong></p>
-		<p><i>UID:</i> <strong>{{data.uid}}</strong></p>
-		<p><i>AID:</i> <strong>{{data.aid}}</strong></p>
-
-		{{#each data.ext as |key|}}
-			{{key}}
-		{{/each}}
-		<hr />
-		<h3>System</h3>
-		<p><i>HTTPS</i> <strong>{{https}}</strong></p>
-	</section>
-	{{/if}}
 
 </section>
 

@@ -2,7 +2,8 @@
 # volebo javascript NPM-ignore rules
 # =========================================
 
-# place per-project settings here
+# per-project settings here
+/server/www-wix.config.yml
 
 # =========================================
 # common part
