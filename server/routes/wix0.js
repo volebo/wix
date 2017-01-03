@@ -33,15 +33,15 @@ function wixWidgetMw(req, res, next) {
 //		instance     : req.query.instance,                // The signed app instance
 		width        : Number(req.query.width || 0),      // The width of the iframe in pixels
 		locale       : req.query.locale,                  // Current locale value
-		cacheKiller  : Number(req.query.cacheKiller),
+		cacheKiller  : Number(req.query.cacheKiller),     // The cacheKiller is there to ensure no caching of the iframe content by the host browser
 		deviceType   : req.query.deviceType,              // "desktop" or "mobile"
 		viewMode     : req.query.viewMode,                // "editor" or "site"
 
-		compId       : req.query.compId,                  // The compId value for the app settings is always tpaSettings
+		compId       : req.query.compId,                  // Unique ID for the widget. The compId value for the app settings is always tpaSettings
 		originCompId : req.query.originCompId || null,    // "editor" or "site"
 	}
 
-	debug(req.wix)
+	debug('wix query-params', req.wix)
 
 	return next()
 }
@@ -54,35 +54,63 @@ function wixWidgetMw(req, res, next) {
  */
 function wix0 (app) {
 
-	app.passport.use('wix0', new WixAppStrategy({
-		secret: app.config.wix.v0.secret
-	}, function verifyCallback(instance, done) {
-		const user = instance.instanceId
+	const wixSecret = app.config.wix.v0.secret
 
-debug('verify callback', instance)
+	app.passport.use('wix0-authorize', new WixAppStrategy({
+		secret: wixSecret,
+		// TODO: check threshold!!!
+		signDateThreshold: false
+	}, function verifyCallback(req, instance, done) {
 
-		return done(null, user)
+		const wixAppChallenge = {
+			instanceId : instance.instanceId,
+			componentId: req.wix.compId,
+		}
+
+		debug('verify callback called')
+		debug('search for a wix-app:', wixAppChallenge)
+
+		return app.model.Wix.Registered.find(wixAppChallenge)
+			.then(wixAppData => {
+
+				if (!wixAppData) {
+					// not a registered application
+					debug('not a known or registered WIX-application')
+					return done(null, false)
+				}
+
+				wixAppData = wixAppData.toJSON()
+				debug('wix registered app:', wixAppData)
+
+				const account = {
+					tour: wixAppData.tour || null
+				}
+
+				done(null, account)
+				return
+			})
+			.catch(err => {
+				done(err)
+				return
+			})
+		;
 	}))
 
-	const authMw = app.passport.authenticate('wix0', { session: false })
-	const router = new vbexpress.Router();
+	const authMw = app.passport.authorize('wix0-authorize', { session: false })
+	const router = new vbexpress.Router()
 
 	const commonRenderOptions = {
 		layout: 'api-v0'
 	};
 
-	router.get('/games-list', (req, res, next) => {
-		// extract query params
-
-console.log('cccccccccccccccccccccccccc', req.user)
+	router.get('/game-previews/list', (req, res, next) => {
 
 		req.lang.setLocale(req.wix.locale);
 		res.locals.width = req.wix.width;
 
 		app.model.Game.collection()
-			.query('where', {tour: 97})
+			.query('where', {tour: req.account.tour})
 			.query('where', {game_state: 2})
-			//.query('limit', 2)
 			.fetch({
 				withRelated: [
 					'homeTeam', 'awayTeam', 'gym'
@@ -91,7 +119,30 @@ console.log('cccccccccccccccccccccccccc', req.user)
 			.then(games => games.toJSON())
 			.then(games => {
 				res.locals.games = games
-				return res.render('wix0/games-list', commonRenderOptions)
+				return res.render('wix0/game-previews/list', commonRenderOptions)
+			})
+			.catch(e => {
+				return next(e)
+			})
+	});
+
+	router.get('/game-result/list', (req, res, next) => {
+
+		req.lang.setLocale(req.wix.locale);
+		res.locals.width = req.wix.width;
+
+		app.model.Game.collection()
+			.query('where', {tour: req.account.tour})
+			.query('where', {game_state: 3})
+			.fetch({
+				withRelated: [
+					'homeTeam', 'awayTeam', 'gym'
+				]
+			})
+			.then(games => games.toJSON())
+			.then(games => {
+				res.locals.games = games
+				return res.render('wix0/game-result/list', commonRenderOptions)
 			})
 			.catch(e => {
 				return next(e)
@@ -99,23 +150,32 @@ console.log('cccccccccccccccccccccccccc', req.user)
 	});
 
 	// App Settings request URL template
-	router.get('/settings', (req, res, next) => {
+	router.get('/game-previews/settings', (req, res, next) => {
 		// instance=[signed-instance]    The signed app instance
 		// &width=[width]                The width of the iframe in pixels
 		// &compId=tpaSettings
 		// &origCompId=[origCompId]      The ID of the Widget component which associated with the App Settings
 		// &locale=[locale]
 
-		res.locals.instance = req.query.instance;
-		res.locals.width = req.query.width;
-		res.locals.compId = req.query.compId;
-		res.locals.origCompId = req.query.origCompId;
-		res.locals.locale = req.query.locale;
+		// res.locals.instance = req.;
+		res.locals.width = req.wix.width;
+		res.locals.compId = req.wix.compId;
+		// res.locals.origCompId = req.wix.origCompId;
+		res.locals.locale = req.wix.locale;
 
-		res.render('wix0/settings', commonRenderOptions);
+		res.render('wix0/game-previews/settings', commonRenderOptions);
 	});
 
-	return [authMw, wixWidgetMw, router]
+	const setHeaders = function setHeaders(req, res, next) {
+
+		// TODO: security here:
+		debug('set X-Frame-Options')
+		res.set('X-Frame-Options', 'ALLOW-FROM http://maxkoryukov.wixsite.com/test')
+
+		return next()
+	}
+
+	return [wixWidgetMw, authMw, setHeaders, router]
 }
 
 exports = module.exports = wix0;

@@ -20,15 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 --}}
 
+{{!--
+WIX GUIDE: http://dev.wix.com/docs/ui-lib/using-ui-lib/#wix-style-parameters
+--}}
+
 <style>
 	.tab {
 		margin-bottom: 20px;
 	}
-
 </style>
+
 <div wix-ctrl="appSettings"></div>
 <div wix-ctrl="panelTabs" wix-options="{defaultTabIndex:0}">
-
 
 	<!--main tab-->
 
@@ -52,11 +55,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	<!--Design tab-->
 
-	<section class="tab" tab="{{__ 'gameList.settings.design.label'}}">
+	<section class="tab" tab="{{__ 'previewsWidget.settings.design.label'}}">
 		<hr class="divider-long"/>
 
 		<div wix-ctrl="SectionDividerLabeled"
-			 wix-options="{label: '{{__ 'gameList.settings.design.textAndBackground.label' }}'}">
+			 wix-options="{label: '{{__ 'previewsWidget.settings.design.textAndBackground.label' }}'}">
 		</div>
 
 		<hr class="divider-long"/>
@@ -65,7 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			 wix-param-color="defaultColor"
 			 wix-ctrl="FontAndColorPicker"
 			 wix-options="{
-					title: '{{__ "gameList.settings.design.defaultFontAndColor.label"}}',
+					title: '{{__ "previewsWidget.settings.design.defaultFontAndColor.label"}}',
 					startWithColor: 'color-5',
 					startWithTheme:'font_8'
 				}"
@@ -76,7 +79,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<div wix-param="backgroundColor"
 			wix-ctrl="ColorPickerSlider"
 			wix-options="{
-					title: '{{__ "gameList.settings.design.background.label"}}',
+					title: '{{__ "previewsWidget.settings.design.background.label"}}',
 					startWithColor: 'color-1'
 				}"
 		></div>
@@ -84,7 +87,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<div wix-param="backgroundColorAlt"
 			 wix-ctrl="ColorPickerSlider"
 			 wix-options="{
-					title: '{{__ "gameList.settings.design.backgroundAlt.label"}}',
+					title: '{{__ "previewsWidget.settings.design.backgroundAlt.label"}}',
 					startWithColor: 'color-2'
 				}"
 		></div>
@@ -95,11 +98,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			 wix-param-color="homeTeamColor"
 			 wix-ctrl="FontAndColorPicker"
 			 wix-options="{
-					title: '{{__ "gameList.settings.design.homeTeamText.label"}}',
+					title: '{{__ "previewsWidget.settings.design.homeTeamText.label"}}',
 					startWithColor: 'color-9',
 					startWithTheme:'font_8',
-					infoTitle: '{{__ "gameList.settings.design.homeTeamText.title"}}',
-					infoText: '{{__ "gameList.settings.design.homeTeamText.info"}}'
+					infoTitle: '{{__ "previewsWidget.settings.design.homeTeamText.title"}}',
+					infoText: '{{__ "previewsWidget.settings.design.homeTeamText.info"}}'
 				}"
 		></div>
 
@@ -107,11 +110,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			 wix-param-color="awayTeamColor"
 			 wix-ctrl="FontAndColorPicker"
 			 wix-options="{
-					title: '{{__ "gameList.settings.design.awayTeamText.label"}}',
+					title: '{{__ "previewsWidget.settings.design.awayTeamText.label"}}',
 					startWithColor: 'color-10',
 					startWithTheme:'font_8',
-					infoTitle: '{{__ "gameList.settings.design.awayTeamText.title"}}',
-					infoText: '{{__ "gameList.settings.design.awayTeamText.info"}}'
+					infoTitle: '{{__ "previewsWidget.settings.design.awayTeamText.title"}}',
+					infoText: '{{__ "previewsWidget.settings.design.awayTeamText.info"}}'
 				}"
 		></div>
 

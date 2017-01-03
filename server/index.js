@@ -42,6 +42,9 @@ app.hbs.layoutsDir = path.join(__dirname, 'views', 'layouts')
 app.hbs.partialsDir = path.join(__dirname, 'views', 'partials')
 app.set('views', path.join(__dirname, 'views'))
 
+// TODO : Autoload from well known place
+app.lang.loadTranslation(require('../translations'))
+
 app.lang.use('/wix/v0', new Wix0Router(app))
 
 exports = module.exports = app
