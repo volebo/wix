@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
 ################################################################################
 #                                                                              #
@@ -29,8 +31,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-exports = module.exports = {
-	'extends': [
-		'volebo'
-	]
-}
+'use strict'
+
+const server = require('../server')
+server.start()

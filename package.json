@@ -49,6 +49,7 @@
   "homepage": "https://github.com/volebo/www-apps#readme",
   "dependencies": {
     "@volebo/volebo-express": "0.x",
+    "bluebird": "^3.5.0",
     "debug": "^3.0.1",
     "dotenv": "^4.0.0",
     "passport-wix-app": "^1.0.5"
