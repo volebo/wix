@@ -1,7 +1,18 @@
-# Wix Integration service for volebo.net
+################################################################################
+#                                                                              #
+# db    db  .8888.  dP     888888b 8888ba   .8888.     d8b   db 888888b d8888P #
+# 88    88 d8'  `8b 88     88      88  `8b d8'  `8b    88V8  88 88        88   #
+# Y8    8P 88    88 88    a88aaa   88aa8P' 88    88    88 V8 88 88aaa     88   #
+# `8b  d8' 88    88 88     88      88  `8b 88    88    88  V888 88        88   #
+#  `8bd8'  Y8.  .8P 88     88      88  .88 Y8.  .8P dP 88   V88 88        88   #
+#    YP     `888P'  88888P 888888P 888888'  `888P'  88 VP    8P 888888P   dP   #
+#                                                                              #
+################################################################################
+
+# Web: integration external services and Volebo.net
 
 # Copyright (C) 2016-2017 Volebo <dev@volebo.net>
-# Copyright (C) 2016-2017 Koryukov Maksim <maxkoryukov@gmail.com>
+# Copyright (C) 2016-2017 Maksim Koryukov <maxkoryukov@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,17 +32,11 @@ sudo: false
 language: node_js
 
 node_js:
-  - node
-  - 4
   - 6
 
 # env:
 #  global:
 #    - NODE_ENV=dev
-
-# matrix:
-#  allow_failures:
-#    - node_js: 4
 
 cache:
   directories:
@@ -48,12 +53,10 @@ install:
 
 script:
 # - gulp build
-
-# testing provided by coverage
-#  - npm test
   - npm run lint
+  - npm test
   - npm run coverage
-  - bithound check git@github.com:volebo/wix.git
+  - bithound check git@github.com:$TRAVIS_REPO_SLUG.git
 
 after_success:
   - codecov
